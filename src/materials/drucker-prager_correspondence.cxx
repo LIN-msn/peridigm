@@ -67,11 +67,8 @@ const int numPoints,
 const double bulkMod,
 const double shearMod,
 const double yieldStress,
-const double strainHardExp,
-const double rateHardExp, 
-const double refStrainRate,
-const double refStrain0,
-const double refStrain1,
+const double hardMod,
+const double beta,
 const double dt
 )
 {
@@ -101,20 +98,13 @@ const double dt
   ScalarT dilatationInc;
   ScalarT sphericalStressN;
   ScalarT sphericalStressNP1;
+  ScalarT pressure;
+  ScalarT hardTerm;
   ScalarT tempScalar;
   ScalarT yieldFunctionVal;
 
   ScalarT deltaLambda;
-  ScalarT deltaLambdaOld = 0.0;
-  ScalarT a;
-  ScalarT b;
-  ScalarT c;
-  ScalarT fb;
-  ScalarT fc;
-  ScalarT yfb;
-  ScalarT yfc;
 
-  double reducedYieldStress;
   const double* modelCoord = modelCoordinates;
 
 
@@ -172,7 +162,7 @@ const double dt
       hardTerm = yieldStress + hardMod * (*eqpsN);
       pressure = -sphericalStressNP1;
 
-      yieldFunctionValVal = (sqrt(2 / 3.) * (beta * pressure + hardTerm));
+      yieldFunctionVal = (sqrt(2 / 3.) * (beta * pressure + hardTerm));
 
       // Elastic or plastic?
       if (deviatoricStressMagnitudeNP1 <= yieldFunctionVal){
@@ -236,7 +226,7 @@ const double dt
 
           deltaLambda = 3 * (sqrt(6) * deviatoricStressMagnitudeN - 2 * yieldStress
                         - 2 * pressure * beta - 2 * hardMod * (*eqpsN) + 4 * tempScalar) /
-                        ( 2 * (sqrt(6) * hardMod + 6 * mu));
+                        ( 2 * (sqrt(6) * hardMod + 6 * shearMod));
 
           //Check if yielding
           if (deltaLambda <= 0.0){
@@ -294,11 +284,8 @@ const int numPoints,
 const double bulkMod,
 const double shearMod,
 const double yieldStress,
-const double strainHardExp,
-const double rateHardExp, 
-const double refStrainRate,
-const double refStrain0,
-const double refStrain1,
+const double hardMod,
+const double beta,
 const double dt
 );
 
@@ -316,11 +303,8 @@ const int numPoints,
 const double bulkMod,
 const double shearMod,
 const double yieldStress,
-const double strainHardExp,
-const double rateHardExp, 
-const double refStrainRate,
-const double refStrain0,
-const double refStrain1,
+const double hardMod,
+const double beta,
 const double dt
 );
 
